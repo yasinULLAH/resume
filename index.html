@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interactive Resume Builder</title>
+    <style>
+        /* CSS Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section-title {
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .item {
+            margin-bottom: 20px;
+        }
+        .item-title {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .item-subtitle {
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .skills-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .skills-list li {
+            display: inline-block;
+            background-color: #e0e0e0;
+            padding: 5px 10px;
+            margin: 5px 5px 0 0;
+            border-radius: 5px;
+        }
+        .contact-info {
+            margin-bottom: 30px;
+        }
+        .contact-info p {
+            margin: 5px 0;
+        }
+        /* Form Styles */
+        .edit-btn {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 8px 12px;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .edit-btn:hover {
+            background-color: #0056b3;
+        }
+        .form-section {
+            display: none;
+            margin-bottom: 40px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="email"], input[type="url"], textarea, select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        input[type="file"] {
+            padding: 5px 0;
+        }
+        .form-actions {
+            margin-top: 20px;
+        }
+        .save-btn, .cancel-btn, .add-btn {
+            padding: 8px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .save-btn {
+            background-color: #28a745;
+            color: #fff;
+        }
+        .save-btn:hover {
+            background-color: #218838;
+        }
+        .cancel-btn {
+            background-color: #dc3545;
+            color: #fff;
+            margin-left: 10px;
+        }
+        .cancel-btn:hover {
+            background-color: #c82333;
+        }
+        .add-btn {
+            background-color: #17a2b8;
+            color: #fff;
+        }
+        .add-btn:hover {
+            background-color: #138496;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+            border-radius: 5px;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        /* Image Styles */
+        #profile-picture {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+        .text-right {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="text-right">
+                <button class="edit-btn" id="edit-toggle-btn">Edit Profile</button>
+            </div>
+            <img id="profile-picture" src="" alt="Profile Picture" style="display: none;">
+            <h1 id="name"></h1>
+            <div class="contact-info" id="contact-info"></div>
+        </header>
+
+        <!-- Summary -->
+        <section class="section">
+            <h2 class="section-title">Summary</h2>
+            <p id="summary"></p>
+        </section>
+
+        <!-- Experience -->
+        <section class="section">
+            <h2 class="section-title">Experience</h2>
+            <div id="experience"></div>
+        </section>
+
+        <!-- Education -->
+        <section class="section">
+            <h2 class="section-title">Education</h2>
+            <div id="education"></div>
+        </section>
+
+        <!-- Certificates -->
+        <section class="section">
+            <h2 class="section-title">Certificates</h2>
+            <div id="certificates"></div>
+        </section>
+
+        <!-- Skills -->
+        <section class="section">
+            <h2 class="section-title">Skills</h2>
+            <ul class="skills-list" id="skills"></ul>
+        </section>
+
+        <!-- Forms for Editing -->
+        <div class="form-section" id="edit-form-section">
+            <h2>Edit Profile</h2>
+            <form id="edit-form">
+                <!-- Basic Information -->
+                <div class="form-group">
+                    <label for="name-input">Full Name:</label>
+                    <input type="text" id="name-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="email-input">Email:</label>
+                    <input type="email" id="email-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone-input">Phone:</label>
+                    <input type="text" id="phone-input">
+                </div>
+                <div class="form-group">
+                    <label for="address-input">Address:</label>
+                    <input type="text" id="address-input">
+                </div>
+                <div class="form-group">
+                    <label for="linkedin-input">LinkedIn:</label>
+                    <input type="url" id="linkedin-input">
+                </div>
+                <div class="form-group">
+                    <label for="github-input">GitHub:</label>
+                    <input type="url" id="github-input">
+                </div>
+                <!-- Profile Picture -->
+                <div class="form-group">
+                    <label for="picture-input">Profile Picture:</label>
+                    <input type="file" id="picture-input" accept="image/*">
+                </div>
+                <!-- Summary -->
+                <div class="form-group">
+                    <label for="summary-input">Summary:</label>
+                    <textarea id="summary-input" rows="4"></textarea>
+                </div>
+
+                <!-- Skills -->
+                <h3>Skills</h3>
+                <div id="skills-container"></div>
+                <button type="button" class="add-btn" id="add-skill-btn">Add Skill</button>
+
+                <!-- Experience -->
+                <h3>Experience</h3>
+                <div id="experience-container"></div>
+                <button type="button" class="add-btn" id="add-experience-btn">Add Experience</button>
+
+                <!-- Education -->
+                <h3>Education</h3>
+                <div id="education-container"></div>
+                <button type="button" class="add-btn" id="add-education-btn">Add Education</button>
+
+                <!-- Certificates -->
+                <h3>Certificates</h3>
+                <div id="certificates-container"></div>
+                <button type="button" class="add-btn" id="add-certificate-btn">Add Certificate</button>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="save-btn">Save Changes</button>
+                    <button type="button" class="cancel-btn" id="cancel-edit-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Code -->
+    <script>
+        // Data Initialization
+        let data = JSON.parse(localStorage.getItem('resumeData')) || {
+            "name": "",
+            "picture": "",
+            "contact": {
+                "email": "",
+                "phone": "",
+                "address": "",
+                "linkedin": "",
+                "github": ""
+            },
+            "summary": "",
+            "experience": [],
+            "education": [],
+            "certificates": [],
+            "skills": []
+        };
+
+        // DOM Elements
+        const editToggleBtn = document.getElementById('edit-toggle-btn');
+        const editFormSection = document.getElementById('edit-form-section');
+        const profilePictureImg = document.getElementById('profile-picture');
+        const nameHeading = document.getElementById('name');
+        const contactInfoDiv = document.getElementById('contact-info');
+        const summaryParagraph = document.getElementById('summary');
+        const experienceDiv = document.getElementById('experience');
+        const educationDiv = document.getElementById('education');
+        const certificatesDiv = document.getElementById('certificates');
+        const skillsUl = document.getElementById('skills');
+        const editForm = document.getElementById('edit-form');
+
+        // Form Fields
+        const nameInput = document.getElementById('name-input');
+        const emailInput = document.getElementById('email-input');
+        const phoneInput = document.getElementById('phone-input');
+        const addressInput = document.getElementById('address-input');
+        const linkedinInput = document.getElementById('linkedin-input');
+        const githubInput = document.getElementById('github-input');
+        const pictureInput = document.getElementById('picture-input');
+        const summaryInput = document.getElementById('summary-input');
+        const skillsContainer = document.getElementById('skills-container');
+        const experienceContainer = document.getElementById('experience-container');
+        const educationContainer = document.getElementById('education-container');
+        const certificatesContainer = document.getElementById('certificates-container');
+        const addSkillBtn = document.getElementById('add-skill-btn');
+        const addExperienceBtn = document.getElementById('add-experience-btn');
+        const addEducationBtn = document.getElementById('add-education-btn');
+        const addCertificateBtn = document.getElementById('add-certificate-btn');
+        const cancelEditBtn = document.getElementById('cancel-edit-btn');
+
+        // Toggle Edit Form
+        editToggleBtn.addEventListener('click', () => {
+            editFormSection.style.display = 'block';
+            populateForm();
+        });
+
+        // Cancel Editing
+        cancelEditBtn.addEventListener('click', () => {
+            editFormSection.style.display = 'none';
+        });
+
+        // Handle Form Submission
+        editForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveData();
+            editFormSection.style.display = 'none';
+            renderResume();
+        });
+
+        // Add Skill
+        addSkillBtn.addEventListener('click', () => {
+            const skillInput = document.createElement('div');
+            skillInput.classList.add('form-group');
+            skillInput.innerHTML = `
+                <input type="text" class="skill-input" placeholder="Enter Skill">
+                <button type="button" class="delete-btn">Delete</button>
+            `;
+            skillsContainer.appendChild(skillInput);
+
+            // Delete Skill
+            skillInput.querySelector('.delete-btn').addEventListener('click', () => {
+                skillsContainer.removeChild(skillInput);
+            });
+        });
+
+        // Add Experience
+        addExperienceBtn.addEventListener('click', () => {
+            const expDiv = document.createElement('div');
+            expDiv.classList.add('form-group');
+            expDiv.innerHTML = `
+                <label>Position:</label>
+                <input type="text" class="exp-position" required>
+                <label>Company:</label>
+                <input type="text" class="exp-company" required>
+                <label>Location:</label>
+                <input type="text" class="exp-location">
+                <label>Duration:</label>
+                <input type="text" class="exp-duration">
+                <label>Details:</label>
+                <textarea class="exp-details" rows="3"></textarea>
+                <button type="button" class="delete-btn">Delete</button>
+            `;
+            experienceContainer.appendChild(expDiv);
+
+            // Delete Experience
+            expDiv.querySelector('.delete-btn').addEventListener('click', () => {
+                experienceContainer.removeChild(expDiv);
+            });
+        });
+
+        // Add Education
+        addEducationBtn.addEventListener('click', () => {
+            const eduDiv = document.createElement('div');
+            eduDiv.classList.add('form-group');
+            eduDiv.innerHTML = `
+                <label>Degree:</label>
+                <input type="text" class="edu-degree" required>
+                <label>Institution:</label>
+                <input type="text" class="edu-institution" required>
+                <label>Location:</label>
+                <input type="text" class="edu-location">
+                <label>Duration:</label>
+                <input type="text" class="edu-duration">
+                <button type="button" class="delete-btn">Delete</button>
+            `;
+            educationContainer.appendChild(eduDiv);
+
+            // Delete Education
+            eduDiv.querySelector('.delete-btn').addEventListener('click', () => {
+                educationContainer.removeChild(eduDiv);
+            });
+        });
+
+        // Add Certificate
+        addCertificateBtn.addEventListener('click', () => {
+            const certDiv = document.createElement('div');
+            certDiv.classList.add('form-group');
+            certDiv.innerHTML = `
+                <label>Certificate Name:</label>
+                <input type="text" class="cert-name" required>
+                <label>Issued By:</label>
+                <input type="text" class="cert-issued-by">
+                <label>Date:</label>
+                <input type="text" class="cert-date">
+                <button type="button" class="delete-btn">Delete</button>
+            `;
+            certificatesContainer.appendChild(certDiv);
+
+            // Delete Certificate
+            certDiv.querySelector('.delete-btn').addEventListener('click', () => {
+                certificatesContainer.removeChild(certDiv);
+            });
+        });
+
+        // Save Data to localStorage
+        function saveData() {
+            data.name = nameInput.value;
+            data.contact.email = emailInput.value;
+            data.contact.phone = phoneInput.value;
+            data.contact.address = addressInput.value;
+            data.contact.linkedin = linkedinInput.value;
+            data.contact.github = githubInput.value;
+            data.summary = summaryInput.value;
+
+            // Save Profile Picture
+            if (pictureInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    data.picture = e.target.result;
+                    localStorage.setItem('resumeData', JSON.stringify(data));
+                    renderResume();
+                }
+                reader.readAsDataURL(pictureInput.files[0]);
+            } else {
+                localStorage.setItem('resumeData', JSON.stringify(data));
+                renderResume();
+            }
+
+            // Save Skills
+            data.skills = [];
+            document.querySelectorAll('.skill-input').forEach(input => {
+                if (input.value.trim() !== "") {
+                    data.skills.push(input.value.trim());
+                }
+            });
+
+            // Save Experience
+            data.experience = [];
+            document.querySelectorAll('#experience-container .form-group').forEach(expDiv => {
+                const position = expDiv.querySelector('.exp-position').value;
+                const company = expDiv.querySelector('.exp-company').value;
+                const location = expDiv.querySelector('.exp-location').value;
+                const duration = expDiv.querySelector('.exp-duration').value;
+                const details = expDiv.querySelector('.exp-details').value.split('\n');
+                if (position && company) {
+                    data.experience.push({
+                        position,
+                        company,
+                        location,
+                        duration,
+                        details
+                    });
+                }
+            });
+
+            // Save Education
+            data.education = [];
+            document.querySelectorAll('#education-container .form-group').forEach(eduDiv => {
+                const degree = eduDiv.querySelector('.edu-degree').value;
+                const institution = eduDiv.querySelector('.edu-institution').value;
+                const location = eduDiv.querySelector('.edu-location').value;
+                const duration = eduDiv.querySelector('.edu-duration').value;
+                if (degree && institution) {
+                    data.education.push({
+                        degree,
+                        institution,
+                        location,
+                        duration
+                    });
+                }
+            });
+
+            // Save Certificates
+            data.certificates = [];
+            document.querySelectorAll('#certificates-container .form-group').forEach(certDiv => {
+                const name = certDiv.querySelector('.cert-name').value;
+                const issuedBy = certDiv.querySelector('.cert-issued-by').value;
+                const date = certDiv.querySelector('.cert-date').value;
+                if (name) {
+                    data.certificates.push({
+                        name,
+                        issuedBy,
+                        date
+                    });
+                }
+            });
+
+            localStorage.setItem('resumeData', JSON.stringify(data));
+        }
+
+        // Populate Form with Existing Data
+        function populateForm() {
+            nameInput.value = data.name;
+            emailInput.value = data.contact.email;
+            phoneInput.value = data.contact.phone;
+            addressInput.value = data.contact.address;
+            linkedinInput.value = data.contact.linkedin;
+            githubInput.value = data.contact.github;
+            summaryInput.value = data.summary;
+
+            // Skills
+            skillsContainer.innerHTML = '';
+            data.skills.forEach(skill => {
+                const skillInput = document.createElement('div');
+                skillInput.classList.add('form-group');
+                skillInput.innerHTML = `
+                    <input type="text" class="skill-input" value="${skill}">
+                    <button type="button" class="delete-btn">Delete</button>
+                `;
+                skillsContainer.appendChild(skillInput);
+
+                // Delete Skill
+                skillInput.querySelector('.delete-btn').addEventListener('click', () => {
+                    skillsContainer.removeChild(skillInput);
+                });
+            });
+
+            // Experience
+            experienceContainer.innerHTML = '';
+            data.experience.forEach(exp => {
+                const expDiv = document.createElement('div');
+                expDiv.classList.add('form-group');
+                expDiv.innerHTML = `
+                    <label>Position:</label>
+                    <input type="text" class="exp-position" value="${exp.position}" required>
+                    <label>Company:</label>
+                    <input type="text" class="exp-company" value="${exp.company}" required>
+                    <label>Location:</label>
+                    <input type="text" class="exp-location" value="${exp.location}">
+                    <label>Duration:</label>
+                    <input type="text" class="exp-duration" value="${exp.duration}">
+                    <label>Details:</label>
+                    <textarea class="exp-details" rows="3">${exp.details.join('\n')}</textarea>
+                    <button type="button" class="delete-btn">Delete</button>
+                `;
+                experienceContainer.appendChild(expDiv);
+
+                // Delete Experience
+                expDiv.querySelector('.delete-btn').addEventListener('click', () => {
+                    experienceContainer.removeChild(expDiv);
+                });
+            });
+
+            // Education
+            educationContainer.innerHTML = '';
+            data.education.forEach(edu => {
+                const eduDiv = document.createElement('div');
+                eduDiv.classList.add('form-group');
+                eduDiv.innerHTML = `
+                    <label>Degree:</label>
+                    <input type="text" class="edu-degree" value="${edu.degree}" required>
+                    <label>Institution:</label>
+                    <input type="text" class="edu-institution" value="${edu.institution}" required>
+                    <label>Location:</label>
+                    <input type="text" class="edu-location" value="${edu.location}">
+                    <label>Duration:</label>
+                    <input type="text" class="edu-duration" value="${edu.duration}">
+                    <button type="button" class="delete-btn">Delete</button>
+                `;
+                educationContainer.appendChild(eduDiv);
+
+                // Delete Education
+                eduDiv.querySelector('.delete-btn').addEventListener('click', () => {
+                    educationContainer.removeChild(eduDiv);
+                });
+            });
+
+            // Certificates
+            certificatesContainer.innerHTML = '';
+            data.certificates.forEach(cert => {
+                const certDiv = document.createElement('div');
+                certDiv.classList.add('form-group');
+                certDiv.innerHTML = `
+                    <label>Certificate Name:</label>
+                    <input type="text" class="cert-name" value="${cert.name}" required>
+                    <label>Issued By:</label>
+                    <input type="text" class="cert-issued-by" value="${cert.issuedBy}">
+                    <label>Date:</label>
+                    <input type="text" class="cert-date" value="${cert.date}">
+                    <button type="button" class="delete-btn">Delete</button>
+                `;
+                certificatesContainer.appendChild(certDiv);
+
+                // Delete Certificate
+                certDiv.querySelector('.delete-btn').addEventListener('click', () => {
+                    certificatesContainer.removeChild(certDiv);
+                });
+            });
+        }
+
+        // Render Resume
+        function renderResume() {
+            // Profile Picture
+            if (data.picture) {
+                profilePictureImg.src = data.picture;
+                profilePictureImg.style.display = 'block';
+            } else {
+                profilePictureImg.style.display = 'none';
+            }
+
+            // Name
+            nameHeading.textContent = data.name;
+
+            // Contact Info
+            contactInfoDiv.innerHTML = `
+                ${data.contact.email ? `<p>Email: <a href="mailto:${data.contact.email}">${data.contact.email}</a></p>` : ''}
+                ${data.contact.phone ? `<p>Phone: ${data.contact.phone}</p>` : ''}
+                ${data.contact.address ? `<p>Address: ${data.contact.address}</p>` : ''}
+                ${data.contact.linkedin ? `<p>LinkedIn: <a href="${data.contact.linkedin}" target="_blank">${data.contact.linkedin}</a></p>` : ''}
+                ${data.contact.github ? `<p>GitHub: <a href="${data.contact.github}" target="_blank">${data.contact.github}</a></p>` : ''}
+            `;
+
+            // Summary
+            summaryParagraph.textContent = data.summary;
+
+            // Experience
+            experienceDiv.innerHTML = '';
+            data.experience.forEach(exp => {
+                const expItem = document.createElement('div');
+                expItem.classList.add('item');
+                expItem.innerHTML = `
+                    <p class="item-title">${exp.position} at ${exp.company}</p>
+                    <p class="item-subtitle">${exp.location} | ${exp.duration}</p>
+                    <ul>
+                        ${exp.details.map(detail => `<li>${detail}</li>`).join('')}
+                    </ul>
+                `;
+                experienceDiv.appendChild(expItem);
+            });
+
+            // Education
+            educationDiv.innerHTML = '';
+            data.education.forEach(edu => {
+                const eduItem = document.createElement('div');
+                eduItem.classList.add('item');
+                eduItem.innerHTML = `
+                    <p class="item-title">${edu.degree}</p>
+                    <p class="item-subtitle">${edu.institution}, ${edu.location} | ${edu.duration}</p>
+                `;
+                educationDiv.appendChild(eduItem);
+            });
+
+            // Certificates
+            certificatesDiv.innerHTML = '';
+            data.certificates.forEach(cert => {
+                const certItem = document.createElement('div');
+                certItem.classList.add('item');
+                certItem.innerHTML = `
+                    <p class="item-title">${cert.name}</p>
+                    <p class="item-subtitle">${cert.issuedBy} | ${cert.date}</p>
+                `;
+                certificatesDiv.appendChild(certItem);
+            });
+
+            // Skills
+            skillsUl.innerHTML = '';
+            data.skills.forEach(skill => {
+                const skillLi = document.createElement('li');
+                skillLi.textContent = skill;
+                skillsUl.appendChild(skillLi);
+            });
+        }
+
+        // Initial Render
+        renderResume();
+    </script>
+</body>
+</html>
